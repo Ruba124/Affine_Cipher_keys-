@@ -8,6 +8,7 @@ string affine_encrypt(string message, int a, int b, string alphabet);
 int cal_gcd(int a, int b);
 int find_mod_inverse(int a, int m);
 string affine_decrypt(string cipher_text, int a_inv, int b, string alphabet);
+int wrap_a(int a, int m);
 
 int main()
 { int a, b;
@@ -15,6 +16,7 @@ int main()
   cout << "--- Affine Cipher (Samoan) ---" << endl;
     cout << "Enter two keys (a b):  " << endl;
     cin >> a >> b;
+  
     if( cal_gcd(a, 17) == 1){
         active_samon = Samon_base;
         cout << "Using Samoan alphabet without space." << endl;
@@ -31,10 +33,10 @@ int main()
     string message;
     cin.ignore();
     getline(cin, message);
-    string encrypted_message =  affine_encrypt(message, a, b, active_samon);
+    string encrypted_message =  affine_encrypt(message, wrap_a(a, active_samon.length()), b, active_samon);
     cout << "Encrypted message: " << encrypted_message << endl;
     cout<<"Decryption part "<<endl;
-    int mod_inverse = find_mod_inverse(a, active_samon.length());
+    int mod_inverse = find_mod_inverse(wrap_a(a, active_samon.length()), active_samon.length());
     if (mod_inverse == -1) {
         cout << "Modular inverse does not exist, decryption not possible." << endl;
         return 1;
@@ -44,9 +46,17 @@ int main()
 return 0;
 
 }
+int wrap_a(int a, int m){
+    if(a > 0) return a;
+    a = (a % m + m);
+    return a;
+}
 
 int cal_gcd(int a, int b)
-{ int r;
+{ if( a < 0){
+    a = wrap_a(a, b);
+}
+    int r;
   while (b != 0)
   { r = a % b;
     a = b;
