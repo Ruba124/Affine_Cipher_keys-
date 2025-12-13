@@ -6,6 +6,8 @@ const string Samon_base = "AEIOUFGHLMNPRSTVK";
 const string Samon_with_space = " AEIOUFGHLMNPRSTVK";
 string affine_encrypt(string message, int a, int b, string alphabet);
 int cal_gcd(int a, int b);
+int find_mod_inverse(int a, int m);
+string affine_decrypt(string cipher_text, int a_inv, int b, string alphabet);
 
 int main()
 { int a, b;
@@ -31,9 +33,16 @@ int main()
     getline(cin, message);
     string encrypted_message =  affine_encrypt(message, a, b, active_samon);
     cout << "Encrypted message: " << encrypted_message << endl;
-   
-
+    cout<<"Decryption part "<<endl;
+    int mod_inverse = find_mod_inverse(a, active_samon.length());
+    if (mod_inverse == -1) {
+        cout << "Modular inverse does not exist, decryption not possible." << endl;
+        return 1;
+    }
+    string decrypted_message = affine_decrypt(encrypted_message, mod_inverse, b, active_samon);
+    cout << "Decrypted message: " << decrypted_message << endl;
 return 0;
+
 }
 
 int cal_gcd(int a, int b)
@@ -45,13 +54,22 @@ int cal_gcd(int a, int b)
   }
   return a;
 }
+int find_mod_inverse(int a, int m) {
+    a = a % m;
+    for (int x = 1; x < m; x++) {
+        if ((a * x) % m == 1) {
+            return x;
+        }
+    }
+    return -1; // No modular inverse exists
+}
 string affine_encrypt(string message, int a, int b, string alphabet) {
     string cipher_text = "";
     int m = alphabet.length(); // Get the modulo (m) from the alphabet size
 
     for (char c : message) {
         // 1. Find the position of the character in the alphabet
-        size_t index = alphabet.find(c);
+       size_t index = alphabet.find(toupper(c));
 
         // 2. Check if the character exists in the alphabet
         if (index != string::npos) {
@@ -70,4 +88,29 @@ string affine_encrypt(string message, int a, int b, string alphabet) {
     }
     
     return cipher_text;
+}
+string affine_decrypt(string cipher_text, int a_inv, int b, string alphabet) {
+    string decrypted_text = "";
+    int m = alphabet.length(); // Get the modulo (m) from the alphabet size
+
+    for (char c : cipher_text) {
+        // 1. Find the position of the character in the alphabet
+        size_t index = alphabet.find(toupper(c));
+
+        // 2. Check if the character exists in the alphabet
+        if (index != string::npos) {
+            // Apply Affine Decryption Formula: a_inv * (x - b) % m
+            long long math_val = (long long)a_inv * (index - b + m); // +m to handle negative values
+            int decrypted_index = ((math_val % m) + m) % m; // Ensure positive modulo
+
+            // Append the new decrypted character
+            decrypted_text += alphabet[decrypted_index];
+        } 
+        else {
+            // 3. If not found (like a space), keep it unchanged
+            decrypted_text += c;
+        }
+    }
+    
+    return decrypted_text;
 }
