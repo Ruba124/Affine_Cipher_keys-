@@ -86,6 +86,9 @@ string affine_encrypt(string message, int a, int b, string alphabet) {
             // Apply Affine Cipher Formula: (ax + b) % m
             // We use 'long long' for the multiplication to prevent overflow before the modulo
             long long math_val = (long long)a * index + b;
+            if(math_val < 0){
+                math_val = wrap_a(math_val, m);
+            }
             int encrypted_index = math_val % m;
 
             // Append the new encrypted character
