@@ -59,7 +59,8 @@ bool exit = false;
     }
     else{
         cout << "Key 'a' is not valid. It must be coprime with " << 17 << " or " << 18 << "." << endl;
-        return 1;
+        count++;
+        continue;
     }
     string message;
     if (count == 0)
