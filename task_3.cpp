@@ -85,19 +85,12 @@ bool exit = false;
     count++;
 }
 
-
-
-
-
-
-
-
-
     return 0;
     
 
 }
 int wrap_a(int a, int m){
+    // Wrap 'a' to be within the range of 0 to m-1
     if(a > 0) return a;
     a = (a % m + m);
     return a;
@@ -127,6 +120,7 @@ int find_mod_inverse(int a, int m) {
 string affine_encrypt(string message, int a, int b, string alphabet) {
     string cipher_text = "";
     int m = alphabet.length(); // Get the modulo (m) from the alphabet size
+    cout<<"The encryption formela is  ("<< a << "x + " << b << ") mod " << m << endl;
 
     for (char c : message) {
         // 1. Find the position of the character in the alphabet
@@ -156,7 +150,7 @@ string affine_encrypt(string message, int a, int b, string alphabet) {
 string affine_decrypt(string cipher_text, int a_inv, int b, string alphabet) {
     string decrypted_text = "";
     int m = alphabet.length(); // Get the modulo (m) from the alphabet size
-
+   cout<<"The decryption formela is  ("<< a_inv << "(x - " << b << ")) mod " << m << endl;
     for (char c : cipher_text) {
         // 1. Find the position of the character in the alphabet
         size_t index = alphabet.find(toupper(c));
@@ -164,7 +158,7 @@ string affine_decrypt(string cipher_text, int a_inv, int b, string alphabet) {
         // 2. Check if the character exists in the alphabet
         if (index != string::npos) {
             // Apply Affine Decryption Formula: a_inv * (x - b) % m
-            long long math_val = (long long)a_inv * (index - b + m); // +m to handle negative values
+            long long math_val = (long long)a_inv * (index - b ); 
             int decrypted_index = ((math_val % m) + m) % m; // Ensure positive modulo
 
             // Append the new decrypted character
