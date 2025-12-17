@@ -24,11 +24,13 @@ bool exit = false;
   b_1 = 13;
   while(!exit){
     if ( count == 0){
+        // First iteration with predefined keys as required
         a = a_1;
         b = b_1;
        
     }
     else if ( count ==1){
+        // Second iteration with user input
          cout<< "----------------------------------"<<endl;
          cout<< "Part B"<<endl;
          cout<< "Now it's your turn to try! "<<endl;
@@ -64,10 +66,11 @@ bool exit = false;
     }
     string message;
     if (count == 0)
-    {
+    { //message for the first part
         message = "E TAUA LENEI GALUEGA";
     }
     else if (count >= 1){
+        //message for the user input part
     cout << "Enter your message: " << endl;
    
     cin.ignore();
@@ -97,6 +100,7 @@ int wrap_a(int a, int m){
 }
 
 int cal_gcd(int a, int b)
+// Function to calculate GCD of two numbers
 { if( a < 0){
     a = wrap_a(a, b);
 }
